@@ -20,6 +20,7 @@ public class CharacterController : RigidEntity
     {
         LoadInfo();
         CreateStateMachine();
+        SetOrderInLayer(1);
     }
 
     public override void ManualUpdate(float dt)

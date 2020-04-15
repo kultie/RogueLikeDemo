@@ -18,6 +18,14 @@ public class Entity : MonoBehaviour
         render.sprite = s;
     }
 
+    public void SetColor(Color col) {
+        render.color = col;
+    }
+
+    public void SetOrderInLayer(int value) {
+        render.sortingOrder = value;
+    }
+
     private void GenerateTemplate()
     {
         SetSprite(ResourceManager.GetSprite("New Piskel",0,"Texture"));
