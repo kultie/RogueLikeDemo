@@ -16,18 +16,9 @@ public class CharacterStateContext : StateContextBase
         moveVelocity = value;
     }
 }
-public class CharacterIdleState : StateBase<CharacterStateContext>
+public abstract class CharacterBaseState : StateBase<CharacterStateContext>
 {
-    protected override void Enter()
-    {
-        context.controller.SetFacingSprite();
-    }
-
-    protected override void Exit()
-    {
-    }
-
-    protected override void Update(float dt)
+    protected Vector2 MoveInput()
     {
         KeyCode lastInput = InputHandleUtilities.GetLastInput();
         Vector2 moveVelocity = Vector2.zero;
@@ -50,6 +41,23 @@ public class CharacterIdleState : StateBase<CharacterStateContext>
                 moveVelocity.x = -1;
                 break;
         }
+        return moveVelocity;
+    }
+}
+public class CharacterIdleState : CharacterBaseState
+{
+    protected override void Enter()
+    {
+        context.controller.SetFacingSprite();
+    }
+
+    protected override void Exit()
+    {
+    }
+
+    protected override void Update(float dt)
+    {
+        Vector2 moveVelocity = MoveInput();
         if (moveVelocity != Vector2.zero)
         {
             context.SetMoveVelocity(moveVelocity);
@@ -58,16 +66,17 @@ public class CharacterIdleState : StateBase<CharacterStateContext>
     }
 }
 
-public class CharacterWalkState : StateBase<CharacterStateContext>
+public class CharacterWalkState : CharacterBaseState
 {
     protected override void Enter()
     {
 
         context.controller.AddForce(context.moveVelocity);
-        FacingResolve(true);
+        FacingResolve();
     }
 
-    void FacingResolve(bool resetIndex) {
+    void FacingResolve()
+    {
         string animPrefix = "walk_";
         switch (context.controller.currentFacing)
         {
@@ -84,7 +93,7 @@ public class CharacterWalkState : StateBase<CharacterStateContext>
                 animPrefix += "up";
                 break;
         }
-        context.controller.RequestAnimation(animPrefix, true, resetIndex);
+        context.controller.RequestAnimation(animPrefix, true, true);
     }
 
     protected override void Exit()
@@ -93,29 +102,12 @@ public class CharacterWalkState : StateBase<CharacterStateContext>
 
     protected override void Update(float dt)
     {
-        KeyCode lastInput = InputHandleUtilities.GetLastInput();
-        Vector2 moveVelocity = Vector2.zero;
         Facing lastFacing = context.controller.currentFacing;
-        switch (lastInput)
+        Vector2 moveVelocity = MoveInput();
+        if (lastFacing != context.controller.currentFacing)
         {
-            case KeyCode.UpArrow:
-                context.controller.SetCurrentFacing(Facing.UP);
-                moveVelocity.y = 1;
-                break;
-            case KeyCode.DownArrow:
-                context.controller.SetCurrentFacing(Facing.DOWN);
-                moveVelocity.y = -1;
-                break;
-            case KeyCode.RightArrow:
-                context.controller.SetCurrentFacing(Facing.RIGHT);
-                moveVelocity.x = 1;
-                break;
-            case KeyCode.LeftArrow:
-                context.controller.SetCurrentFacing(Facing.LEFT);
-                moveVelocity.x = -1;
-                break;
+            FacingResolve();
         }
-        FacingResolve(lastFacing != context.controller.currentFacing);
         if (moveVelocity != Vector2.zero)
         {
             context.controller.AddForce(moveVelocity);
