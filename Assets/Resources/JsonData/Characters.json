@@ -1,0 +1,53 @@
+{
+  "template": {
+    "entity": "template",
+    "move_speed": 5,
+    "friction": 0.8,
+    "max_speed": 5,
+    "start_facing": "down",
+    "anims": {
+      "idle_up": [
+        0
+      ],
+      "idle_right": [
+        4
+      ],
+      "idle_down": [
+        8
+      ],
+      "idle_left": [
+        12
+      ],
+      "walk_up": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "walk_right": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "walk_down": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "walk_left": [
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    "facing": {
+      "up": 0,
+      "right": 4,
+      "down": 8,
+      "left": 12
+    }
+  }
+}

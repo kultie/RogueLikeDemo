@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
+        InputHandleUtilities.UpdateInput();
         float dt = Time.deltaTime;
         var arr = entities.ToArray();
         for (int i = arr.Length - 1; i >= 0; --i) {

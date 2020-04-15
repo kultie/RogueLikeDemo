@@ -13,16 +13,19 @@ public class Entity : MonoBehaviour
         GameController.Instance.AddEntity(this);
     }
 
-    public void SetSprite(Sprite s) {
+    public void SetSprite(Sprite s)
+    {
         render.sprite = s;
     }
 
-    private void GenerateTemplate() {
-        SetSprite(Resources.Load<Sprite>("New Piskel"));
+    private void GenerateTemplate()
+    {
+        SetSprite(ResourceManager.GetSprite("New Piskel",0,"Texture"));
     }
 
-    public virtual void ManualUpdate(float dt) { 
-    
+    public virtual void ManualUpdate(float dt)
+    {
+
     }
 
     public virtual void ManualFixedUpdate(float dt)
