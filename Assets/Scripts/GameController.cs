@@ -10,24 +10,36 @@ public class GameController : MonoBehaviour
     public static GameController Instance;
     List<Entity> entities = new List<Entity>();
     public ProCamera2D cam { private set; get; }
-    DungeonGeneration d;
+
     private void Awake()
     {
         cam = Camera.main.GetComponent<ProCamera2D>();
         Instance = this;
-        CharacterController a = new GameObject("Character").AddComponent<CharacterController>();
-        cam.AddCameraTarget(a.transform);
-        a.Setup(5, 5, 0.8f);
-        d = new DungeonGeneration(50, 50);
         CreateMap();
+        CreateTemplateCharacter();
+    }
+
+    void CreateTemplateCharacter() {
+        RigidEntity a = new GameObject("Character").AddComponent<RigidEntity>();
+        a.SetController(new CharacterControllerBase(a));
+        cam.AddCameraTarget(a.transform);
+        RigidEntity b = new GameObject("Character").AddComponent<RigidEntity>();
+        b.SetController(new InverseCharacterController(b));
+        b.transform.position = Vector2.one;
+        cam.AddCameraTarget(b.transform);
     }
 
     void CreateMap()
     {
+        DungeonGeneration d = new DungeonGeneration(100, 100);
         d.CreateMap();
         d.IterateMap(SpawnTile);
     }
 
+    /// <summary>
+    /// Spawn Tile for dungeon after generated
+    /// </summary>
+    /// <param name="tile"></param>
     void SpawnTile(DungeonTile tile)
     {
         Entity a = new GameObject("Tile(" + tile.x + ":" + tile.y).AddComponent<Entity>();

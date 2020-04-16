@@ -4,31 +4,34 @@ using UnityEngine;
 using Kultie.StateMachine;
 using Kultie.Animation;
 
-public class CharacterController : RigidEntity
+public class CharacterControllerBase : EntityControllerBase
 {
+    public RigidEntity rigidEntity
+    {
+        get
+        {
+            return (RigidEntity)entity;
+        }
+    }
     StateMachine<CharacterState, CharacterStateContext> stateMachine;
     public CharacterInfo info { private set; get; }
     CharacterStateContext context;
     AnimationSystem anim;
     public Facing currentFacing { private set; get; }
-    private void Start()
-    {
-        Initialize();
-    }
+    public CharacterControllerBase(RigidEntity e) : base(e) { }
 
-    void Initialize()
+    protected override void Initialize()
     {
         LoadInfo();
         CreateStateMachine();
-        SetOrderInLayer(1);
+        entity.SetOrderInLayer(1);
     }
 
-    public override void ManualUpdate(float dt)
+    public override void Update(float dt)
     {
-        base.ManualUpdate(dt);
         stateMachine.Update(dt);
         anim.Update(dt);
-        SetSprite(anim.Frame());
+        entity.SetSprite(anim.Frame());
     }
 
     void LoadInfo()
@@ -36,7 +39,7 @@ public class CharacterController : RigidEntity
         info = new CharacterInfo("template");
         currentFacing = info.startFacing;
         SetFacingSprite();
-        Setup(info.moveSpeed, info.maxSpeed, info.friction);
+        rigidEntity.SetupRigidInfo(info.moveSpeed, info.maxSpeed, info.friction);
     }
 
     void CreateStateMachine()
@@ -46,7 +49,7 @@ public class CharacterController : RigidEntity
         stateMachine.Change(CharacterState.IDLE, context);
     }
 
-    Dictionary<CharacterState, IState<CharacterStateContext>> CreateStates()
+    protected virtual Dictionary<CharacterState, IState<CharacterStateContext>> CreateStates()
     {
         Dictionary<CharacterState, IState<CharacterStateContext>> a = new Dictionary<CharacterState, IState<CharacterStateContext>>();
         a[CharacterState.IDLE] = new CharacterIdleState();
@@ -77,7 +80,8 @@ public class CharacterController : RigidEntity
         currentFacing = f;
     }
 
-    public void SetFacingSprite() {
+    public void SetFacingSprite()
+    {
         switch (currentFacing)
         {
             case Facing.DOWN:

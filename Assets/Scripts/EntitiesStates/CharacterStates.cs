@@ -3,9 +3,9 @@ using Kultie.StateMachine;
 public class CharacterStateContext : StateContextBase
 {
     public Vector2 moveVelocity { private set; get; }
-    public CharacterController controller { private set; get; }
+    public CharacterControllerBase controller { private set; get; }
     public StateMachine<CharacterState, CharacterStateContext> sm { private set; get; }
-    public CharacterStateContext(CharacterController c, StateMachine<CharacterState, CharacterStateContext> s)
+    public CharacterStateContext(CharacterControllerBase c, StateMachine<CharacterState, CharacterStateContext> s)
     {
         controller = c;
         sm = s;
@@ -18,7 +18,7 @@ public class CharacterStateContext : StateContextBase
 }
 public abstract class CharacterBaseState : StateBase<CharacterStateContext>
 {
-    protected Vector2 MoveInput()
+    protected virtual Vector2 MoveInput()
     {
         KeyCode lastInput = InputHandleUtilities.GetLastInput();
         Vector2 moveVelocity = Vector2.zero;
@@ -71,7 +71,7 @@ public class CharacterWalkState : CharacterBaseState
     protected override void Enter()
     {
 
-        context.controller.AddForce(context.moveVelocity);
+        context.controller.rigidEntity.AddForce(context.moveVelocity);
         FacingResolve();
     }
 
@@ -110,7 +110,134 @@ public class CharacterWalkState : CharacterBaseState
         }
         if (moveVelocity != Vector2.zero)
         {
-            context.controller.AddForce(moveVelocity);
+            context.controller.rigidEntity.AddForce(moveVelocity);
+        }
+        else
+        {
+            context.sm.Change(CharacterState.IDLE, context);
+        }
+    }
+}
+
+public class InverseCharacterIdleState : StateBase<CharacterStateContext>
+{
+    protected override void Enter()
+    {
+        context.controller.SetFacingSprite();
+    }
+
+    protected virtual Vector2 MoveInput()
+    {
+        KeyCode lastInput = InputHandleUtilities.GetLastInput();
+        Vector2 moveVelocity = Vector2.zero;
+        switch (lastInput)
+        {
+            case KeyCode.DownArrow:
+                context.controller.SetCurrentFacing(Facing.UP);
+                moveVelocity.y = 1;
+                break;
+            case KeyCode.UpArrow:
+                context.controller.SetCurrentFacing(Facing.DOWN);
+                moveVelocity.y = -1;
+                break;
+            case KeyCode.LeftArrow:
+                context.controller.SetCurrentFacing(Facing.RIGHT);
+                moveVelocity.x = 1;
+                break;
+            case KeyCode.RightArrow:
+                context.controller.SetCurrentFacing(Facing.LEFT);
+                moveVelocity.x = -1;
+                break;
+        }
+        return moveVelocity;
+    }
+
+    protected override void Exit()
+    {
+    }
+
+    protected override void Update(float dt)
+    {
+        Vector2 moveVelocity = MoveInput();
+        if (moveVelocity != Vector2.zero)
+        {
+            context.SetMoveVelocity(moveVelocity);
+            context.sm.Change(CharacterState.WALK, context);
+        }
+    }
+}
+public class InverseCharacterWalkState : StateBase<CharacterStateContext>
+{
+    protected override void Enter()
+    {
+
+        context.controller.rigidEntity.AddForce(context.moveVelocity);
+        Debug.Log(context.controller);
+        FacingResolve();
+    }
+
+    protected virtual Vector2 MoveInput()
+    {
+        KeyCode lastInput = InputHandleUtilities.GetLastInput();
+        Vector2 moveVelocity = Vector2.zero;
+        switch (lastInput)
+        {
+            case KeyCode.DownArrow:
+                context.controller.SetCurrentFacing(Facing.UP);
+                moveVelocity.y = 1;
+                break;
+            case KeyCode.UpArrow:
+                context.controller.SetCurrentFacing(Facing.DOWN);
+                moveVelocity.y = -1;
+                break;
+            case KeyCode.LeftArrow:
+                context.controller.SetCurrentFacing(Facing.RIGHT);
+                moveVelocity.x = 1;
+                break;
+            case KeyCode.RightArrow:
+                context.controller.SetCurrentFacing(Facing.LEFT);
+                moveVelocity.x = -1;
+                break;
+        }
+        return moveVelocity;
+    }
+
+    void FacingResolve()
+    {
+        string animPrefix = "walk_";
+        switch (context.controller.currentFacing)
+        {
+            case Facing.LEFT:
+                animPrefix += "left";
+                break;
+            case Facing.DOWN:
+                animPrefix += "down";
+                break;
+            case Facing.RIGHT:
+                animPrefix += "right";
+                break;
+            case Facing.UP:
+                animPrefix += "up";
+                break;
+        }
+        context.controller.RequestAnimation(animPrefix, true, true);
+    }
+
+    protected override void Exit()
+    {
+    }
+
+    protected override void Update(float dt)
+    {
+        Facing lastFacing = context.controller.currentFacing;
+        Vector2 moveVelocity = MoveInput();
+        if (lastFacing != context.controller.currentFacing)
+        {
+            FacingResolve();
+        }
+        if (moveVelocity != Vector2.zero)
+        {
+            context.controller.rigidEntity.AddForce(moveVelocity);
         }
         else
         {

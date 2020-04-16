@@ -25,7 +25,7 @@ public class RigidEntity : Entity
     [SerializeField]
     float friction;
 
-    public void Setup(float moveSpeed, float maxVelocity, float friction) {
+    public void SetupRigidInfo(float moveSpeed, float maxVelocity, float friction) {
         this.moveSpeed = moveSpeed;
         this.maxVelocity = maxVelocity;
         this.friction = friction;

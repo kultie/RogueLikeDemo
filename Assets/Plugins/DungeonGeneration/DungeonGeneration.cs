@@ -16,10 +16,10 @@ namespace Kultie.DungeonSystem
             get;
         }
 
-        private int simulationStep = 20000;
+        private int simulationStep = 30000;
         private int chanceToStartAlive = 45;
         private int limit = 4;
-        private int caveSizeLimit = 20;
+        private int caveSizeLimit = 10;
 
         private List<Cave> caves = new List<Cave>();
 
