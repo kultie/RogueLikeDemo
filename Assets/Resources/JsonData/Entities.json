@@ -1,6 +1,10 @@
 {
-    "template": {
-      "texture": "walk_cycle",
-      "start_frame": 8
-    }
+  "template": {
+    "texture": "walk_cycle",
+    "start_frame": 8
+  },
+  "template_2": {
+    "texture": "walk_cycle",
+    "start_frame": 24
+  }
 }

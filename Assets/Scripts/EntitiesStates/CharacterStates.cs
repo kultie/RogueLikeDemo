@@ -172,7 +172,6 @@ public class InverseCharacterWalkState : StateBase<CharacterStateContext>
     {
 
         context.controller.rigidEntity.AddForce(context.moveVelocity);
-        Debug.Log(context.controller);
         FacingResolve();
     }
 

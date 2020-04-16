@@ -19,12 +19,13 @@ public class GameController : MonoBehaviour
         CreateTemplateCharacter();
     }
 
-    void CreateTemplateCharacter() {
+    void CreateTemplateCharacter()
+    {
         RigidEntity a = new GameObject("Character").AddComponent<RigidEntity>();
-        a.SetController(new CharacterControllerBase(a));
+        a.SetController(new CharacterControllerBase(a, "template"));
         cam.AddCameraTarget(a.transform);
         RigidEntity b = new GameObject("Character").AddComponent<RigidEntity>();
-        b.SetController(new InverseCharacterController(b));
+        b.SetController(new InverseCharacterController(b, "template_2"));
         b.transform.position = Vector2.one;
         cam.AddCameraTarget(b.transform);
     }

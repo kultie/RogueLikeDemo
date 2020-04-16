@@ -18,11 +18,11 @@ public class CharacterControllerBase : EntityControllerBase
     CharacterStateContext context;
     AnimationSystem anim;
     public Facing currentFacing { private set; get; }
-    public CharacterControllerBase(RigidEntity e) : base(e) { }
+    public CharacterControllerBase(RigidEntity e, string src) : base(e, src) { }
 
-    protected override void Initialize()
+    protected override void Initialize(string src)
     {
-        LoadInfo();
+        LoadInfo(src);
         CreateStateMachine();
         entity.SetOrderInLayer(1);
     }
@@ -34,9 +34,9 @@ public class CharacterControllerBase : EntityControllerBase
         entity.SetSprite(anim.Frame());
     }
 
-    void LoadInfo()
+    void LoadInfo(string src)
     {
-        info = new CharacterInfo("template");
+        info = new CharacterInfo(src);
         currentFacing = info.startFacing;
         SetFacingSprite();
         rigidEntity.SetupRigidInfo(info.moveSpeed, info.maxSpeed, info.friction);

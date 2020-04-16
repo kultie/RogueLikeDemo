@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class InverseCharacterController : CharacterControllerBase
 {
-    public InverseCharacterController(RigidEntity e) : base(e)
+    public InverseCharacterController(RigidEntity e,string src) : base(e, src)
     {
 
     }
