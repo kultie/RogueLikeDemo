@@ -48,6 +48,7 @@ public class CharacterIdleState : CharacterBaseState
 {
     protected override void Enter()
     {
+        context.controller.rigidEntity.ResetAcceleration();
         context.controller.SetFacingSprite();
     }
 
@@ -106,6 +107,7 @@ public class CharacterWalkState : CharacterBaseState
         Vector2 moveVelocity = MoveInput();
         if (lastFacing != context.controller.currentFacing)
         {
+            context.controller.rigidEntity.ResetAcceleration();
             FacingResolve();
         }
         if (moveVelocity != Vector2.zero)

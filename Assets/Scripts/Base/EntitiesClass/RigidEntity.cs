@@ -51,12 +51,15 @@ public class RigidEntity : Entity
         acceleration += force * moveSpeed;
     }
 
+    public void ResetAcceleration() {
+        acceleration = Vector2.zero;
+    }
+
     public override void ManualFixedUpdate(float dt)
     {
-        velocity += acceleration;
+        velocity += acceleration * dt;
         velocity = Vector2.ClampMagnitude(velocity, maxVelocity);
-        body.MovePosition(body.position + velocity * dt);
-        acceleration = Vector2.zero;
+        body.MovePosition(body.position + velocity * dt);  
         velocity *= friction;
     }
 

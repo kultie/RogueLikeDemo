@@ -1,7 +1,7 @@
 {
   "template": {
     "entity": "template",
-    "move_speed": 5,
+    "acceleration_rate": 50,
     "friction": 0.8,
     "max_speed": 5,
     "start_facing": "down",

@@ -8,7 +8,7 @@ public class CharacterInfo
     public Dictionary<string, Sprite[]> animationData { private set; get; }
     public Dictionary<Facing, Sprite> facingSprite { private set; get; }
     public Facing startFacing { private set; get; }
-    public float moveSpeed { private set; get; }
+    public float accelerationRate { private set; get; }
     public float friction { private set; get; }
     public float maxSpeed { private set; get; }
     public CharacterInfo(string characterID)
@@ -18,7 +18,7 @@ public class CharacterInfo
         InitializeAnimationData(data["anims"].AsObject);
         InitializeFacingSprites(data["facing"].AsObject);
         startFacing = GetStartFacing(data["start_facing"]);
-        moveSpeed = data["move_speed"].AsFloat;
+        accelerationRate = data["acceleration_rate"].AsFloat;
         friction = data["friction"].AsFloat;
         maxSpeed = data["max_speed"].AsFloat;
 

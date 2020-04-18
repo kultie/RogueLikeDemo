@@ -39,7 +39,7 @@ public class CharacterControllerBase : EntityControllerBase
         info = new CharacterInfo(src);
         currentFacing = info.startFacing;
         SetFacingSprite();
-        rigidEntity.SetupRigidInfo(info.moveSpeed, info.maxSpeed, info.friction);
+        rigidEntity.SetupRigidInfo(info.accelerationRate, info.maxSpeed, info.friction);
     }
 
     void CreateStateMachine()

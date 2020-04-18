@@ -24,10 +24,10 @@ public class GameController : MonoBehaviour
         RigidEntity a = new GameObject("Character").AddComponent<RigidEntity>();
         a.SetController(new CharacterControllerBase(a, "template"));
         cam.AddCameraTarget(a.transform);
-        RigidEntity b = new GameObject("Character").AddComponent<RigidEntity>();
-        b.SetController(new InverseCharacterController(b, "template_2"));
-        b.transform.position = Vector2.one;
-        cam.AddCameraTarget(b.transform);
+        //RigidEntity b = new GameObject("Character").AddComponent<RigidEntity>();
+        //b.SetController(new InverseCharacterController(b, "template_2"));
+        //b.transform.position = Vector2.one;
+        //cam.AddCameraTarget(b.transform);
     }
 
     void CreateMap()
