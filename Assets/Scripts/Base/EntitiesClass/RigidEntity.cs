@@ -31,6 +31,10 @@ public class RigidEntity : Entity
         this.friction = friction;
     }
 
+    public void SetupColliderInfo(float colliderSize) {
+        SetScaleForCollider(colliderSize);
+    }
+
     protected override void Awake()
     {
         base.Awake();
@@ -39,7 +43,7 @@ public class RigidEntity : Entity
         boxCollider = gameObject.AddComponent<BoxCollider2D>();
     }
 
-    private void SetupBodyInfo() {
+    protected virtual void SetupBodyInfo() {
         body.gravityScale = 0;
         body.mass = 0;
         body.angularDrag = 0;
@@ -65,5 +69,9 @@ public class RigidEntity : Entity
 
     public void SetMoveSpeed(float value) {
         moveSpeed = value;
+    }
+
+    public void SetScaleForCollider(float value) {
+        boxCollider.size = Vector2.one * value;
     }
 }

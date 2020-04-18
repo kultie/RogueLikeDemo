@@ -17,11 +17,12 @@ namespace Kultie.DungeonSystem
         }
 
         private int simulationStep = 30000;
-        private int chanceToStartAlive = 45;
+        private int chanceToStartAlive = 40;
         private int limit = 4;
         private int caveSizeLimit = 10;
 
         private List<Cave> caves = new List<Cave>();
+        public Cave mainCave { private set; get; }
 
         int width;
         int height;
@@ -49,6 +50,7 @@ namespace Kultie.DungeonSystem
 
         public void CreateMap()
         {
+            mainCave = new Cave();
             InitializeMap();
             for (int i = 0; i < simulationStep; ++i)
             {
@@ -133,12 +135,11 @@ namespace Kultie.DungeonSystem
 
         void CreateTunnel(Vector2Int p1, Vector2 p2, Cave cave)
         {
-            const int maxStep = 500;
             int steps = 0;
             int startX = p1.x;
             int startY = p1.y;
             DungeonTile currentTile = grid[startX, startY];
-            while (steps < maxStep)
+            while (true)
             {
                 ++steps;
                 double n = 1;
@@ -201,6 +202,7 @@ namespace Kultie.DungeonSystem
                     if (grid[startX, startY].type == TileType.WALL)
                     {
                         grid[startX, startY].SetTileType(TileType.PATH);
+                        mainCave.AddTile(grid[startX, startY]);
                     }
                     SetCellType(startX + 1, startY, TileType.PATH);
                     SetCellType(startX + 1, startY + 1, TileType.PATH);
@@ -317,6 +319,11 @@ namespace Kultie.DungeonSystem
         public Vector2Int GetPosition()
         {
             return new Vector2Int(x, y);
+        }
+
+        public Vector3Int GetPosition3()
+        {
+            return new Vector3Int(x, y,0);
         }
     }
 }

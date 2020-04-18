@@ -40,6 +40,7 @@ public class CharacterControllerBase : EntityControllerBase
         currentFacing = info.startFacing;
         SetFacingSprite();
         rigidEntity.SetupRigidInfo(info.accelerationRate, info.maxSpeed, info.friction);
+        rigidEntity.SetScaleForCollider(0.5f);
     }
 
     void CreateStateMachine()

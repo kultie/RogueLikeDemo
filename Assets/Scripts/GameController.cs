@@ -3,18 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using Kultie.DungeonSystem;
 using Com.LuisPedroFonseca.ProCamera2D;
+using UnityEngine.Tilemaps;
+
 public class GameController : MonoBehaviour
 {
-    public Transform gridContainer;
+    [SerializeField]
+    int mapWidth;
+    [SerializeField]
+    int mapHeight;
 
+    public Tile groundTile;
+    public Tilemap groundLayer;
+
+    public RuleTile wallTile;
+    public Tilemap wallLayer;
+
+    Vector3Int mapCenterOffSet;
+
+    DungeonGeneration d;
     public static GameController Instance;
     List<Entity> entities = new List<Entity>();
     public ProCamera2D cam { private set; get; }
 
     private void Awake()
     {
-        cam = Camera.main.GetComponent<ProCamera2D>();
         Instance = this;
+
+        cam = Camera.main.GetComponent<ProCamera2D>();
         CreateMap();
         CreateTemplateCharacter();
     }
@@ -23,6 +38,7 @@ public class GameController : MonoBehaviour
     {
         RigidEntity a = new GameObject("Character").AddComponent<RigidEntity>();
         a.SetController(new CharacterControllerBase(a, "template"));
+        a.transform.position = d.mainCave.GetRandomTile().GetPosition3() - mapCenterOffSet;
         cam.AddCameraTarget(a.transform);
         //RigidEntity b = new GameObject("Character").AddComponent<RigidEntity>();
         //b.SetController(new InverseCharacterController(b, "template_2"));
@@ -32,9 +48,15 @@ public class GameController : MonoBehaviour
 
     void CreateMap()
     {
-        DungeonGeneration d = new DungeonGeneration(100, 100);
+        d = new DungeonGeneration(mapWidth, mapHeight);
+        mapCenterOffSet = new Vector3Int(mapWidth / 2, mapHeight / 2, 0);
         d.CreateMap();
         d.IterateMap(SpawnTile);
+        var boundary = cam.GetComponent<ProCamera2DNumericBoundaries>();
+        boundary.TopBoundary = mapHeight / 2;
+        boundary.BottomBoundary = -mapHeight / 2;
+        boundary.RightBoundary = mapWidth / 2;
+        boundary.LeftBoundary = -mapWidth / 2;
     }
 
     /// <summary>
@@ -43,12 +65,13 @@ public class GameController : MonoBehaviour
     /// <param name="tile"></param>
     void SpawnTile(DungeonTile tile)
     {
-        Entity a = new GameObject("Tile(" + tile.x + ":" + tile.y).AddComponent<Entity>();
-        a.transform.SetParent(gridContainer);
-        a.transform.position = new Vector2(tile.x - 25, tile.y - 25);
         if (tile.type == TileType.WALL)
         {
-            a.SetColor(Color.black);
+            wallLayer.SetTile(tile.GetPosition3() - mapCenterOffSet, wallTile);
+        }
+        else
+        {
+            groundLayer.SetTile(tile.GetPosition3() - mapCenterOffSet, groundTile);
         }
     }
 
