@@ -4,7 +4,7 @@ using UnityEngine;
 using Kultie.StateMachine;
 using Kultie.Animation;
 
-public class CharacterControllerBase : EntityControllerBase
+public class CharacterControllerBase : EntityControllerBase, ITriggerCollision
 {
     public RigidEntity rigidEntity
     {
@@ -98,5 +98,15 @@ public class CharacterControllerBase : EntityControllerBase
                 RequestAnimation("idle_right", true);
                 break;
         }
+    }
+
+    public void EnterTriggerCollision(Entity e)
+    {
+        Debug.Log("Enter" + e);
+    }
+
+    public void ExitTriggerCollision(Entity e)
+    {
+        Debug.Log("Exit" + e);
     }
 }

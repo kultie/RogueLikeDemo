@@ -36,7 +36,8 @@ public class Entity : MonoBehaviour
 
     public virtual void ManualUpdate(float dt)
     {
-        if (controller != null) {
+        if (controller != null)
+        {
             controller.Update(dt);
         }
     }
@@ -54,5 +55,53 @@ public class Entity : MonoBehaviour
     private void OnDisable()
     {
         GameController.Instance.RemoveEntity(this);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (controller != null)
+        {
+            ICollision controllerInteraction = controller as ICollision;
+            if (controllerInteraction != null)
+            {
+                controllerInteraction.EnterCollision(collision.gameObject.GetComponent<Entity>());
+            }
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (controller != null)
+        {
+            ICollision controllerInteraction = controller as ICollision;
+            if (controllerInteraction != null)
+            {
+                controllerInteraction.ExitCollision(collision.gameObject.GetComponent<Entity>());
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (controller != null)
+        {
+            ITriggerCollision controllerInteraction = controller as ITriggerCollision;
+            if (controllerInteraction != null)
+            {
+                controllerInteraction.EnterTriggerCollision(collision.gameObject.GetComponent<Entity>());
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (controller != null)
+        {
+            ITriggerCollision controllerInteraction = controller as ITriggerCollision;
+            if (controllerInteraction != null)
+            {
+                controllerInteraction.ExitTriggerCollision(collision.gameObject.GetComponent<Entity>());
+            }
+        }
     }
 }
