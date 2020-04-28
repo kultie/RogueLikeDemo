@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class EntityControllerBase
+public abstract class EntityControllerBase<T> where T : Entity
 {
-    public Entity entity { private set; get; }
-    public EntityControllerBase(Entity e, string resourceName)
+    public T entity { private set; get; }
+    public EntityControllerBase(T e, string resourceName)
     {
         entity = e;
         Initialize(resourceName);

@@ -1,9 +1,9 @@
 {
   "template": {
     "entity": "template",
-    "acceleration_rate": 50,
-    "friction": 0.8,
-    "max_speed": 5,
+    "acceleration_rate": 100,
+    "friction": 0.5,
+    "max_speed": 20,
     "start_facing": "down",
     "anims": {
       "idle_up": [

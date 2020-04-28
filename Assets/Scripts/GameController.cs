@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour
 
     DungeonGeneration d;
     public static GameController Instance;
-    List<Entity> entities = new List<Entity>();
+    CharacterController characterController;
     public ProCamera2D cam { private set; get; }
 
     private void Awake()
@@ -37,7 +37,7 @@ public class GameController : MonoBehaviour
     void CreateTemplateCharacter()
     {
         RigidEntity a = new GameObject("Character").AddComponent<RigidEntity>();
-        a.SetController(new CharacterControllerBase(a, "template"));
+        characterController = new CharacterController(a, "template");
         a.transform.position = d.mainCave.GetRandomTile().GetPosition3() - mapCenterOffSet;
         cam.AddCameraTarget(a.transform);
         //RigidEntity b = new GameObject("Character").AddComponent<RigidEntity>();
@@ -79,30 +79,6 @@ public class GameController : MonoBehaviour
     {
         InputHandleUtilities.UpdateInput();
         float dt = Time.deltaTime;
-        var arr = entities.ToArray();
-        for (int i = arr.Length - 1; i >= 0; --i)
-        {
-            arr[i].ManualUpdate(dt);
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        float dt = Time.deltaTime;
-        var arr = entities.ToArray();
-        for (int i = arr.Length - 1; i >= 0; --i)
-        {
-            arr[i].ManualFixedUpdate(dt);
-        }
-    }
-
-    public void AddEntity(Entity e)
-    {
-        entities.Add(e);
-    }
-
-    public void RemoveEntity(Entity e)
-    {
-        entities.Remove(e);
+        characterController.Update(dt);
     }
 }
